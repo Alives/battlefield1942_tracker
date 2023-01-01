@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
+import signal
 import socket
+import sys
 import time
 
 from datetime import timedelta
@@ -17,6 +19,12 @@ TERM = {
     'reset': '\033[0m',
     'underline': '\033[4m',
 }
+
+
+def sigintHandler(*args):
+  sys.stdout.write('\b\b\r')
+  sys.stdout.flush()
+  sys.exit(0)
 
 
 def connect():
@@ -116,6 +124,8 @@ def output(header, tickets, players):
     print()
 
 
+# Hide traceback on control-C
+signal.signal(signal.SIGINT,sigintHandler)
 errors = []
 print(TERM['clear_screen'], end='')
 while True:
